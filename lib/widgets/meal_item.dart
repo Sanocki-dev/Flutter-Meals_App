@@ -54,6 +54,12 @@ class MealItem extends StatelessWidget {
       MealDetailScreen.routeName,
       arguments: id,
     );
+    // Then is triggered if the page is popped
+    // .then(
+    //   (removedMeal) => {
+    //     if (removedMeal != null) removeItem(removedMeal),
+    //   },
+    // );
   }
 
   @override

@@ -1,36 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/widgets/meal_item.dart';
 
 // Local
 import '../dummy_data.dart';
+import '../models/meal.dart';
+import '../widgets/meal_item.dart';
 
-class CategoryMealsScreen extends StatelessWidget {
+class CategoryMealsScreen extends StatefulWidget {
   static const routeName = '/category-meals';
 
+  final List<Meal> availableMeals;
+
+  CategoryMealsScreen(this.availableMeals);
+
   @override
-  Widget build(BuildContext context) {
+  State<CategoryMealsScreen> createState() => _CategoryMealsScreenState();
+}
+
+class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
+  String? categoryTitle;
+  late List<Meal> displayedMeals;
+
+  @override
+  void didChangeDependencies() {
     final routeArgs =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     final categoryId = routeArgs['id'];
-    final categoryTitle = routeArgs['title'];
-    final categoryMeals = DUMMY_MEALS
+    categoryTitle = routeArgs['title'];
+    displayedMeals = widget.availableMeals
         .where((meal) => meal.categories.contains(categoryId))
         .toList();
 
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(categoryTitle!),
       ),
       body: ListView.builder(
         itemBuilder: (ctx, index) => MealItem(
-          id: categoryMeals[index].id,
-          title: categoryMeals[index].title,
-          imageUrl: categoryMeals[index].imageUrl,
-          duration: categoryMeals[index].duration,
-          affordability: categoryMeals[index].affordability,
-          complexity: categoryMeals[index].complexity,
+          id: displayedMeals[index].id,
+          title: displayedMeals[index].title,
+          imageUrl: displayedMeals[index].imageUrl,
+          duration: displayedMeals[index].duration,
+          affordability: displayedMeals[index].affordability,
+          complexity: displayedMeals[index].complexity,
         ),
-        itemCount: categoryMeals.length,
+        itemCount: displayedMeals.length,
       ),
     );
   }
